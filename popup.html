@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        width: 800px;
+        min-height: 600px;
+        max-width: 800px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        margin: 0;
+        padding: 16px;
+        background-color: #f8f9fa;
+        box-sizing: border-box;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #e9ecef;
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: 18px;
+        color: #212529;
+      }
+
+      .controls {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        padding: 4px 8px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        background-color: #fff;
+        cursor: pointer;
+        font-size: 11px;
+        transition: background-color 0.2s;
+      }
+
+      .btn:hover {
+        background-color: #e9ecef;
+      }
+
+      .btn-danger {
+        background-color: #dc3545;
+        color: white;
+        border-color: #dc3545;
+      }
+
+      .btn-danger:hover {
+        background-color: #c82333;
+      }
+
+      .btn-primary {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+      }
+
+      .btn-primary:hover {
+        background-color: #0056b3;
+      }
+
+      .stats {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 16px;
+        font-size: 14px;
+        color: #6c757d;
+      }
+
+      .flow-container {
+        max-height: 500px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        background-color: white;
+      }
+
+      .flow-item {
+        border-bottom: 1px solid #e9ecef;
+        padding: 12px;
+      }
+
+      .flow-item:last-child {
+        border-bottom: none;
+      }
+
+      .flow-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+      }
+
+      .flow-header:hover {
+        background-color: #f8f9fa;
+      }
+
+      .flow-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .flow-status {
+        padding: 2px 6px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      .status-complete {
+        background-color: #d4edda;
+        color: #155724;
+      }
+
+      .status-partial {
+        background-color: #fff3cd;
+        color: #856404;
+      }
+
+      .status-error {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+
+      .client-id {
+        font-family: "Monaco", "Menlo", monospace;
+        font-size: 12px;
+        background-color: #e9ecef;
+        padding: 2px 6px;
+        border-radius: 3px;
+      }
+
+      .timestamp {
+        font-size: 11px;
+        color: #6c757d;
+      }
+
+      .toggle-icon {
+        font-size: 12px;
+        color: #6c757d;
+        transition: transform 0.2s;
+      }
+
+      .toggle-icon.expanded {
+        transform: rotate(90deg);
+      }
+
+      .flow-details {
+        display: none;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid #e9ecef;
+      }
+
+      .flow-details.expanded {
+        display: block;
+      }
+
+      .request-response {
+        margin-bottom: 16px;
+      }
+
+      .request-response:last-child {
+        margin-bottom: 0;
+      }
+
+      .section-title {
+        font-weight: bold;
+        margin-bottom: 8px;
+        color: #495057;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .request-icon {
+        color: #007bff;
+      }
+
+      .response-icon {
+        color: #28a745;
+      }
+
+      .error-icon {
+        color: #dc3545;
+      }
+
+      .missing-icon {
+        color: #6c757d;
+      }
+
+      .params-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+        margin-top: 8px;
+        table-layout: fixed;
+      }
+
+      .params-table th,
+      .params-table td {
+        padding: 6px 8px;
+        text-align: left;
+        border-bottom: 1px solid #e9ecef;
+      }
+
+      .params-table th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+        width: 25%;
+      }
+
+      .params-table td {
+        font-family: "Monaco", "Menlo", monospace;
+        word-break: break-all;
+        max-width: 300px;
+        overflow-wrap: break-word;
+        position: relative;
+      }
+
+      .url-display {
+        font-family: "Monaco", "Menlo", monospace;
+        font-size: 11px;
+        background-color: #f8f9fa;
+        padding: 8px;
+        border-radius: 4px;
+        margin-top: 6px;
+        word-break: break-all;
+        overflow-wrap: break-word;
+        max-width: 100%;
+        color: #495057;
+      }
+
+      .no-flows {
+        text-align: center;
+        padding: 40px;
+        color: #6c757d;
+        font-style: italic;
+      }
+
+      .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .empty-icon {
+        font-size: 48px;
+        color: #dee2e6;
+      }
+
+      .copy-btn {
+        padding: 2px 6px;
+        margin-left: 8px;
+        border: 1px solid #ced4da;
+        border-radius: 3px;
+        background-color: #f8f9fa;
+        color: #495057;
+        cursor: pointer;
+        font-size: 10px;
+        transition: background-color 0.2s;
+      }
+
+      .copy-btn:hover {
+        background-color: #e9ecef;
+      }
+
+      .copy-btn:active {
+        background-color: #dee2e6;
+      }
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 8px;
+      }
+
+      .copy-buttons {
+        display: flex;
+        gap: 4px;
+      }
+
+      .param-copy-btn {
+        float: right;
+        padding: 1px 4px;
+        margin-left: 8px;
+        font-size: 9px;
+        flex-shrink: 0;
+      }
+
+      .param-cell-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        word-break: break-all;
+        overflow-wrap: break-word;
+      }
+
+      .param-value {
+        flex: 1;
+        min-width: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>AZRecorder</h1>
+      <div class="controls">
+        <button id="exportBtn" class="btn btn-primary">Export JSON</button>
+        <button id="clearBtn" class="btn btn-danger">Clear All</button>
+      </div>
+    </div>
+
+    <div class="stats">
+      <span>Total Flows: <strong id="totalFlows">0</strong></span>
+      <span>Complete: <strong id="completeFlows">0</strong></span>
+      <span>Partial: <strong id="partialFlows">0</strong></span>
+      <span>Errors: <strong id="errorFlows">0</strong></span>
+    </div>
+
+    <div class="flow-container" id="flowContainer">
+      <div class="no-flows">
+        <div class="empty-state">
+          <div class="empty-icon">🔍</div>
+          <div>No OAuth flows captured yet</div>
+          <div style="font-size: 12px; color: #adb5bd">
+            Visit a website with OAuth/OpenID Connect authentication to start
+            collecting flows
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
